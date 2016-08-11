@@ -1,0 +1,12 @@
+/node_modules
+/coverage-reporter.html
+/npm-debug.log
+
+/.idea
+*~
+.DS_Store
+
+# logs
+/logs
+/log
+*.log

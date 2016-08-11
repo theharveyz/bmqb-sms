@@ -1,0 +1,39 @@
+{
+  "name": "bmqb-sms",
+  "version": "0.0.1",
+  "description": "BMQB SMS package",
+  "main": "index.js",
+  "scripts": {
+    "test": "npm test",
+    "lint": "eslint src",
+    "build": "babel src --out-dir lib"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bmqb/bmqb-sms.git"
+  },
+  "keywords": [
+    "bmqb",
+    "bmqb-sms"
+  ],
+  "author": "harveyz@bmqb.com",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/bmqb/bmqb-sms/issues"
+  },
+  "homepage": "https://github.com/bmqb/bmqb-sms#readme",
+  "devDependencies": {
+    "babel": "^6.5.2",
+    "babel-cli": "^6.11.4",
+    "babel-eslint": "^6.1.2",
+    "babel-preset-es2015-node4": "^2.1.0",
+    "eslint": "^3.2.2",
+    "eslint-config-airbnb": "^10.0.0",
+    "eslint-plugin-import": "^1.13.0",
+    "eslint-plugin-jsx-a11y": "^2.1.0",
+    "eslint-plugin-react": "^6.0.0"
+  },
+  "dependencies": {
+    "babel-polyfill": "^6.13.0"
+  }
+}
