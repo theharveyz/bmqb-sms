@@ -2,7 +2,7 @@ var fs = require('fs');
 var path = require('path');
 
 try{
-  fs.accessSync(path.join('./lib/', 'index.js'), fs.constants.R_OK);
+  fs.accessSync(__dirname + '/lib/index.js', fs.R_OK);
 
   exports = module.exports = require('./lib');
 } catch (e) {

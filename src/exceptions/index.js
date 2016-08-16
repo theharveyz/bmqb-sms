@@ -3,10 +3,8 @@ import appRoot from 'app-root-path';
 import { crc32 } from '../utils';
 
 export class Exception extends Error {
-  constructor(...args) {
-    const params = Array.from(new Set(args));
-    const [msg, statusCode] = params;
-    if (typeof msg === 'number' || (params.length === 1 && msg.startsWith(path.sep) === true)) {
+  constructor(msg, statusCode) {
+    if (typeof msg === 'number' || msg.startsWith(path.sep) === true) {
       throw new TypeError('Exception message not allow pure number or a file path');
     }
     // 这里无需再传递给Error message
@@ -33,8 +31,8 @@ export class Exception extends Error {
 
 
 export class LogicException extends Exception {
-  constructor(...args) {
-    super(...args);
+  constructor(msg, statusCode) {
+    super(msg, statusCode);
     this.statusCode = 400;
   }
 }
