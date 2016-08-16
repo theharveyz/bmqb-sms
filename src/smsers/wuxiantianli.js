@@ -64,6 +64,9 @@ export default class Wuxiantianli extends SmserAbstract {
     if (!_.isArray(pkg) || !pkg.length) {
       throw new InvalidArgumentException('Invalid format: pkg!');
     }
+    if (pkg.length > 1000) {
+      throw new InvalidArgumentException('Every time may not be sent more than 1000 msg');
+    }
     const mobiles = new Set();
     let msg = '';
     pkg.map(p => {
