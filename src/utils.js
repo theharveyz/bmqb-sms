@@ -1,22 +1,18 @@
 import crypto from 'crypto';
 
 export const encodeBase64Url = (content) => {
-  const javaURLEncode = (str) => {
-    encodeURI(str)
+  const javaURLEncode = (str) => encodeURI(str)
       .replace(/%20/g, '+')
       .replace(/!/g, '%21')
       .replace(/'/g, '%27')
       .replace(/\(/g, '%28')
       .replace(/\)/g, '%29')
       .replace(/~/g, '%7E');
-  };
 
   return new Buffer(javaURLEncode(content)).toString('base64');
 };
 
-export const md5 = (content) => {
-  crypto.createHash('md5').update(content).digest('hex');
-};
+export const md5 = (content) => crypto.createHash('md5').update(content).digest('hex');
 
 export const crc32 = (str) => {
   const table =

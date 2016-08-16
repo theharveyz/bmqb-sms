@@ -9,10 +9,10 @@ export default class BmqbSms {
       throw new InvalidArgumentException('Invalid format of config!');
     }
 
-    if (!(smser in smsers)) {
+    const smserClass = _.upperFirst(smser.toLowerCase());
+    if (!(smserClass in smsers)) {
       throw new InvalidArgumentException('The smser not found!');
     }
-    const smserClass = _.upperFirst(smser.toLowerCase());
     return new smsers[smserClass](config, request(debug));
   }
 }

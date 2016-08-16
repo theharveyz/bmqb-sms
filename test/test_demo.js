@@ -3,7 +3,9 @@ import path from 'path';
 import crypto from 'crypto';
 import BmqbSms from '../';
 import { InvalidArgumentException } from '../src/exceptions';
+import { encodeBase64Url } from '../src/utils';
 
+console.log(encodeBase64Url('halo'));
 
 const options = {
   'smser': 'yuntongxin',
