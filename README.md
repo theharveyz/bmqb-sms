@@ -2,7 +2,7 @@
 贝米钱包短信发送库
 
 ## 使用方式：
-1. 必要配置：
+####1. 必要配置：
 ```JavaScript
 {
   'smser': 'yuntongxin',
@@ -15,7 +15,7 @@
 * `config`: 发送渠道必要配置（接口鉴权等必要配置信息）
 * `debug`: [*可选*], 为`true`时，将在命令行输出接口请求详细信息
 
-2. 调用方式：
+####2. 调用方式：
 ```JavaScript
 //以yuntongxin为例
 const options = {
@@ -36,7 +36,7 @@ sms.sendVcode('13871451762', '你的验证码是...').then(res => {
 });
 ```
 
-3. API：
+####3. API：
 * sendVcode(mobile, msg): 发送短信验证码
 * sendSms(mobile, msg): 单条短信发送
 * sendVoiceVcode(mobile, code): 发送语音验证码，**目前仅支持云通信**
@@ -61,7 +61,7 @@ sms.sendVcode('13871451762', '你的验证码是...').then(res => {
 > NOTICE: 不支持某种发送方式的渠道，当调用该种方式API时，将会抛出异常！
 
 
-4. 返回结果：
+####4. 返回结果：
 约定返回结果为一个`SmsResponse`对象，该对象有以下属性：
 * status: 请求状态(success|failed|pending)
 * ssid: 发送批次号
