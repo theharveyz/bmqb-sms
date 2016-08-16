@@ -1,19 +1,28 @@
-import BmqbSms from '../src';
+import BmqbSms from '../';
 import crypto from 'crypto';
+import { InvalidArgumentException } from '../src/exceptions';
+import appRoot from 'app-root-path';
+import path from 'path';
 
 
 const options = {
-  'smser': 'boshitong',
+  'smser': 'yuntongxin',
   'config': {
-    'domain': 'http://112.74.128.143:9890',
-    'uid': '710520',
-    'pwd': 'BT710520',
-    'srcphone': '106900840520',
+    'sandbox': true,
+    'account_sid': '00000000000000000000000000000000',
+    'auth_token': '00000000000000000000000000000000',
+    'app_id': '00000000000000000000000000000000',
+    'vcode_template_id': 1,
+    'vcode_timeout_min': 10,
   },
-  'debug': true
 };
 
 const sms = new BmqbSms(options);
-sms.sendSms('13871451762', 'hello');
-console.log(sms.sendPkg());
-
+sms.sendVcode('13871451762', 'hello').then(res => {
+  console.log(res);
+});
+sms.sendPkg([{'phone': '13871451762', 'context': 'ni'}])
+.then((res) => console.log(res))
+.catch(err => {
+  console.log(err);
+});

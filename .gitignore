@@ -10,3 +10,6 @@
 /logs
 /log
 *.log
+
+# build files
+/lib

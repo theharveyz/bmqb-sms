@@ -1,21 +1,22 @@
+import _ from 'lodash';
 import * as smsers from './smsers';
 import request from './http_client';
-import _ from 'lodash';
+import { InvalidArgumentException } from './exceptions';
 
 export default class BmqbSms {
   constructor({
-    smser, 
-    config = null, 
-    debug = false
+    smser,
+    config = null,
+    debug = false,
   }) {
     if (!config || !smser) {
-      throw new Error('参数错误');
+      throw new InvalidArgumentException('Invalid format of config!');
     }
 
     if (!smser in smsers) {
-      throw new Error('smser not found!');
+      throw new InvalidArgumentException('The smser not found!');
     }
-    smser = _.upperFirst(smser.toLowerCase());
-    return new smsers[smser](config, request(debug));
+    const smser_class = _.upperFirst(smser.toLowerCase());
+    return new smsers[smser_class](config, request(debug));
   }
 }

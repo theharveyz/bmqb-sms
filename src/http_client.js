@@ -8,6 +8,5 @@ export default function request(debug = false) {
       console.log(res);
     });
   }
-
   return rp;
 }

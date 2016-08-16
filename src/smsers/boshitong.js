@@ -1,68 +1,92 @@
-import SmserAbstract from './abstract';
 import _ from 'lodash';
-import rp from '../http_client';
+import SmserAbstract from './abstract';
 import { md5 } from '../utils';
+import SmsResponse from '../sms_response';
+import { InvalidArgumentException } from '../exceptions';
 
-let config = {
-  'domain': null,
-  'uid': null,
-  'pwd': null,
-  'srcphone': null,
-};
-
-const REQ_CODES = {
-  'ARGUMENTS_ERR': '-2',
-  'VALIDATION_ERR': '-1', // 验证错误（ip地址未绑定等）
-  'SRCPHONE_ERR': '7', // 长号错误
-  'TRAFFIC_CTRL_ERR': '8', // 流量控制错误
-  'OTHER_ERR': '9', //其他错误
-  'BALANCE_LACK': '11', // 余额不足
-};
 
 export default class Boshitong extends SmserAbstract {
+  static fetchBatchId(str) {
+    if (!str instanceof String) {
+      throw new InvalidArgumentException('Response must be a String');
+    }
+    // 如果发送成功的话，则返回内容为：`0,{批次号}`
+    const reg = /^0\,(.*)$/;
+    const matches = str.match(reg);
+    if (matches instanceof Array && matches.length === 2) {
+      return matches[1];
+    }
+    return null;
+  }
+
   constructor(_config, request) {
-    super();
-    Object.assign(config, _config);
-    _.forEach(config, (v, k) => {
-      if(!v){
-        throw new Error('参数错误');
-      }
+    super({
+      'domain': null,
+      'uid': null,
+      'pwd': null,
+      'srcphone': null,
     });
-
-    config.pwd = md5(config.pwd);
-
+    this.setConfig(_config);
     this.request = request;
+  }
+
+  sendVcode(mobile, msg) {
+    return this.sendSms(mobile, msg);
   }
 
   sendSms(mobile, msg) {
     if(!msg || !mobile) {
-      throw new Error('参数错误');
+      throw new InvalidArgumentException('Please specify params: mobile and msg!');
     }
 
-    return this.request.post(
-      `${config.domain}/cmppweb/sendsms`, {
-        'form': {
-          'uid': config.uid,
-          'pwd': config.pwd,
-          'srcphone': config.srcphone,
-          'mobile': mobile,
-          'msg': msg,
-        }
+    return this.send('/cmppweb/sendsms', {
+      'mobile': mobile,
+      'msg': msg,
+    }).then(res => {
+      const batchId = Boshitong.fetchBatchId(res);
+      return new SmsResponse({
+        'ssid': batchId,
+        'status': batchId ? 'success' : 'failed',
+        'body': res,
       });
+    });
+
   }
 
   sendPkg(pkg) {
     if (!_.isArray(pkg) || !pkg.length) {
-      throw new Error('参数错误');
+      throw new InvalidArgumentException('Invalid format: pkg!');
     }
-    return this.request.post(
-      `${config.domain}/cmppweb/sendsmspkg`, {
-        'form': {
-          'uid': config.uid,
-          'pwd': config.pwd,
-          'srcphone': config.srcphone,
-          'msg': pkg,
-        }
-      });    
+    // 变换成字符串
+    pkg = JSON.stringify(pkg);
+
+    return this.send('/cmppweb/sendsmspkg', {
+      'msg': pkg,
+    }).then(res => {
+      const batchId = Boshitong.fetchBatchId(res);
+      return new SmsResponse({
+        'ssid': batchId,
+        'status': batchId ? 'success' : 'failed',
+        'body': res,
+      });
+    });
   }
+
+  send(api, data) {
+    let qs = {
+      'uid': this.config.uid,
+      'pwd': this.config.pwd,
+      'srcphone': this.config.srcphone,   
+    };
+    Object.assign(qs, data);
+    
+    return this.request({
+      'url': this.config.domain + api,
+      'method': 'POST',
+      'qs': qs,
+      'timeout': 10000,
+      'useQuerystring': true,
+    });
+  }
+
 }
