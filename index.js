@@ -4,7 +4,9 @@ try{
   fs.accessSync(path.join('./lib/', 'index.js'), fs.constants.R_OK);
   
   // 兼容新的接口
-  require('babel-polyfill');
+  if (!global._babelPolyfill) {
+    require('babel-polyfill');
+  }
 
   exports = module.exports = require('./lib');
 } catch (e) {

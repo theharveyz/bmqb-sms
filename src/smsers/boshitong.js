@@ -11,7 +11,7 @@ export default class Boshitong extends SmserAbstract {
       throw new InvalidArgumentException('Response must be a String');
     }
     // 如果发送成功的话，则返回内容为：`0,{批次号}`
-    const reg = /^0\,(.*)$/;
+    const reg = /^0,(.*)$/;
     const matches = str.match(reg);
     if (matches instanceof Array && matches.length === 2) {
       return matches[1];
@@ -21,10 +21,10 @@ export default class Boshitong extends SmserAbstract {
 
   constructor(_config, request) {
     super({
-      'domain': null,
-      'uid': null,
-      'pwd': null,
-      'srcphone': null,
+      domain: null,
+      uid: null,
+      pwd: null,
+      srcphone: null,
     });
     this.setConfig(_config);
     this.request = request;
@@ -35,22 +35,21 @@ export default class Boshitong extends SmserAbstract {
   }
 
   sendSms(mobile, msg) {
-    if(!msg || !mobile) {
+    if (!msg || !mobile) {
       throw new InvalidArgumentException('Please specify params: mobile and msg!');
     }
 
     return this.send('/cmppweb/sendsms', {
-      'mobile': mobile,
-      'msg': msg,
+      mobile,
+      msg,
     }).then(res => {
       const batchId = Boshitong.fetchBatchId(res);
       return new SmsResponse({
-        'ssid': batchId,
-        'status': batchId ? 'success' : 'failed',
-        'body': res,
+        ssid: batchId,
+        status: batchId ? 'success' : 'failed',
+        body: res,
       });
     });
-
   }
 
   sendPkg(pkg) {
@@ -58,34 +57,34 @@ export default class Boshitong extends SmserAbstract {
       throw new InvalidArgumentException('Invalid format: pkg!');
     }
     // 变换成字符串
-    pkg = JSON.stringify(pkg);
+    const pkgStr = JSON.stringify(pkg);
 
     return this.send('/cmppweb/sendsmspkg', {
-      'msg': pkg,
+      msg: pkgStr,
     }).then(res => {
       const batchId = Boshitong.fetchBatchId(res);
       return new SmsResponse({
-        'ssid': batchId,
-        'status': batchId ? 'success' : 'failed',
-        'body': res,
+        ssid: batchId,
+        status: batchId ? 'success' : 'failed',
+        body: res,
       });
     });
   }
 
   send(api, data) {
-    let qs = {
-      'uid': this.config.uid,
-      'pwd': this.config.pwd,
-      'srcphone': this.config.srcphone,   
+    const qs = {
+      uid: this.config.uid,
+      pwd: md5(this.config.pwd),
+      srcphone: this.config.srcphone,
     };
     Object.assign(qs, data);
-    
+
     return this.request({
-      'url': this.config.domain + api,
-      'method': 'POST',
-      'qs': qs,
-      'timeout': 10000,
-      'useQuerystring': true,
+      url: this.config.domain + api,
+      method: 'POST',
+      qs,
+      timeout: 10000,
+      useQuerystring: true,
     });
   }
 

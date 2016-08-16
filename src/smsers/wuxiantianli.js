@@ -3,6 +3,7 @@ import moment from 'moment';
 import SmserAbstract from './abstract';
 import { encodeBase64Url } from '../utils';
 import { InvalidArgumentException } from '../exceptions';
+import SmsResponse from '../sms_response';
 
 export default class Wuxiantianli extends SmserAbstract {
 
@@ -12,9 +13,9 @@ export default class Wuxiantianli extends SmserAbstract {
 
   constructor(_config, request) {
     super({
-      'service': null,
-      'clientid': null,
-      'password': null,
+      service: null,
+      clientid: null,
+      password: null,
     });
     this.setConfig(_config);
     this.request = request;
@@ -26,15 +27,17 @@ export default class Wuxiantianli extends SmserAbstract {
     }
 
     if (!this.config.vcode_productid) {
-      throw new InvalidArgumentException('Please specify the config param: vcode_productid!');
+      throw new InvalidArgumentException(
+        'Please specify the config param: vcode_productid!'
+        );
     }
 
     return this.send({
-      'api': '/communication/sendSms.ashx', 
-      'mobile': mobile, 
-      'msg': msg, 
-      'pid': this.config.vcode_productid,
-    });    
+      api: '/communication/sendSms.ashx',
+      mobile,
+      msg,
+      pid: this.config.vcode_productid,
+    });
   }
 
   sendSms(mobile, msg) {
@@ -47,10 +50,10 @@ export default class Wuxiantianli extends SmserAbstract {
     }
 
     return this.send({
-      'api': '/communication/sendSms.ashx', 
-      'mobile': mobile, 
-      'msg': msg, 
-      'pid': this.config.productid,
+      api: '/communication/sendSms.ashx',
+      mobile,
+      msg,
+      pid: this.config.productid,
     });
   }
 
@@ -61,53 +64,58 @@ export default class Wuxiantianli extends SmserAbstract {
     if (!_.isArray(pkg) || !pkg.length) {
       throw new InvalidArgumentException('Invalid format: pkg!');
     }
-    let [mobiles,msg] = [new Set(),''];
+    const mobiles = new Set();
+    let msg = '';
     pkg.map(p => {
-      mobiles.add(p['phone']);
-      msg = p['context'];
+      mobiles.add(p.phone);
+      msg = p.context;
+      return null;
     });
     return this.sendSms(Array.from(mobiles).join(), msg);
   }
 
-  send({api, mobile, content, pid}) {
+
+  send({ api, mobile, content, pid }) {
     const batchId = Wuxiantianli.getBatchId();
-    let queryData = {
-      'content': encodeBase64Url(content),
-      'mobile': encodeBase64Url(mobile),
-      'productid': pid,
-      'ssid': batchId,
-      'lcode': '',
-      'format': 32,
-      'sign': '',
-      'custom': '',  
+    const queryData = {
+      content: encodeBase64Url(content),
+      mobile: encodeBase64Url(mobile),
+      productid: pid,
+      ssid: batchId,
+      lcode: '',
+      format: 32,
+      sign: '',
+      custom: '',
     };
 
     Object.assign(queryData, {
-      'cid': encodeBase64Url(this.config.clientid),
-      'pwd': encodeBase64Url(this.config.password),
+      cid: encodeBase64Url(this.config.clientid),
+      pwd: encodeBase64Url(this.config.password),
     });
 
     return this.request({
-      'url': this.config.service + api,
-      'method': 'GET',
-      'headers': {
-        'Accept': 'application/json'
+      url: this.config.service + api,
+      method: 'GET',
+      headers: {
+        Accept: 'application/json',
       },
-      'qs': queryData,
-      'timeout': 10000,
-      'useQuerystring': true
-    }).then( body => {
-      let status = 'failed'
+      qs: queryData,
+      timeout: 10000,
+      useQuerystring: true,
+    }).then(body => {
+      let status = 'failed';
       try {
-        const _body = body instanceof String ? JSON.parse(body) : body;
-        if (_body.status == '0') {
+        const bodyObj = body instanceof String ? JSON.parse(body) : body;
+        if (bodyObj.status === '0' || bodyObj.status === 0) {
           status = 'success';
         }
-      }catch(e){}
+      } catch (e) {
+        // ...
+      }
       return new SmsResponse({
-        'ssid': batchId,
-        'status': status,
-        'body': body,
+        ssid: batchId,
+        status,
+        body,
       });
     });
   }

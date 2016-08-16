@@ -36,7 +36,7 @@ sms.sendVcode('13871451762', '你的验证码是...').then(res => {
 });
 ```
 
-####3. API：
+####3. API：所有API均以Promise对象作为返回结果。
 * sendVcode(mobile, msg): 发送短信验证码
 * sendSms(mobile, msg): 单条短信发送
 * sendVoiceVcode(mobile, code): 发送语音验证码，**目前仅支持云通信**
@@ -66,3 +66,5 @@ sms.sendVcode('13871451762', '你的验证码是...').then(res => {
 * status: 请求状态(success|failed|pending)
 * ssid: 发送批次号
 * body: 接口原始响应结果
+
+> 通过promise.then捕获返回结果

@@ -2,17 +2,19 @@ import _ from 'lodash';
 import { RuntimeException, InvalidArgumentException } from '../exceptions';
 
 export default class SmserAbstract {
-  constructor(init_config) {
-    this.config = init_config;
+  constructor(initConfig) {
+    this.config = initConfig;
   }
 
   /**
    * 发送语音验证码
    * @returns {Promise}
    */
-  sendVoiceVcode(mobile, code) { 
+  sendVoiceVcode() {
     return new Promise(() => {
-      throw new RuntimeException(`Class ${this.constructor.name} A does not support sendVoiceVcode!`);
+      throw new RuntimeException(
+        `Class ${this.constructor.name} A does not support sendVoiceVcode!`
+        );
     });
   }
 
@@ -20,7 +22,7 @@ export default class SmserAbstract {
    * 发送验证码
    * @returns {Promise}
    */
-  sendVcode(mobile, code) { 
+  sendVcode() {
     return new Promise(() => {
       throw new RuntimeException(`Class ${this.constructor.name} A does not support sendVcode!`);
     });
@@ -30,17 +32,17 @@ export default class SmserAbstract {
    * 发送单条
    * @returns {Promise}
    */
-  sendSms(mobile, msg) { 
+  sendSms() {
     return new Promise(() => {
       throw new RuntimeException(`Class ${this.constructor.name} A does not support sendSms!`);
-    });  
+    });
   }
 
   /**
    * 群发
    * @returns {Promise}
    */
-  sendPkg(pkg) {
+  sendPkg() {
     return new Promise(() => {
       throw new RuntimeException(`Class ${this.constructor.name} A does not support sendPkg!`);
     });
@@ -49,11 +51,11 @@ export default class SmserAbstract {
   /**
    * 设置配置
    */
-  setConfig(_config) {
-    const init_config = _.clone(this.config);
-    Object.assign(this.config, _config);
-    _.forEach(init_config, (v, k) => {
-      if(!this.config[k]){
+  setConfig(config) {
+    const initConfig = _.clone(this.config);
+    Object.assign(this.config, config);
+    _.forEach(initConfig, (v, k) => {
+      if (!this.config[k]) {
         throw new InvalidArgumentException(`Please specify the config param: ${k}`);
       }
     });
