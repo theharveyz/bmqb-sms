@@ -78,10 +78,10 @@ export default class Wuxiantianli extends SmserAbstract {
   }
 
 
-  send({ api, mobile, content, pid }) {
+  send({ api, mobile, msg, pid }) {
     const batchId = Wuxiantianli.getBatchId();
     const queryData = {
-      content: encodeBase64Url(content),
+      content: encodeBase64Url(msg),
       mobile: encodeBase64Url(mobile),
       productid: pid,
       ssid: batchId,

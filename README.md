@@ -63,7 +63,7 @@ sms.sendVcode('13871451762', '你的验证码是...').then(res => {
 
 ####4. 返回结果：
 约定返回结果为一个`SmsResponse`对象，该对象有以下属性：
-* status: 请求状态(success|failed|pending)
+* status: 请求状态(success|failed)
 * ssid: 发送批次号
 * body: 接口原始响应结果
 

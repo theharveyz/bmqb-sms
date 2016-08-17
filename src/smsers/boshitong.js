@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import moment from 'moment';
 import SmserAbstract from './abstract';
 import { md5 } from '../utils';
 import SmsResponse from '../sms_response';
@@ -7,8 +8,12 @@ import { InvalidArgumentException } from '../exceptions';
 
 export default class Boshitong extends SmserAbstract {
   static fetchBatchId(str) {
-    if (!str instanceof String) {
+    if (str && !(str instanceof String)) {
       throw new InvalidArgumentException('Response must be a String');
+    }
+    if (!str) {
+      // 自定义批次号
+      return moment().format('YYYYMMDDHHmmss') + new Date().getMilliseconds();
     }
     // 如果发送成功的话，则返回内容为：`0,{批次号}`
     const reg = /^0,(.*)$/;
@@ -16,6 +21,7 @@ export default class Boshitong extends SmserAbstract {
     if (matches instanceof Array && matches.length === 2) {
       return matches[1];
     }
+
     return null;
   }
 
