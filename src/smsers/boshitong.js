@@ -8,16 +8,20 @@ import { InvalidArgumentException } from '../exceptions';
 
 export default class Boshitong extends SmserAbstract {
   static fetchBatchId(str) {
-    if (str && !(str instanceof String)) {
+    let newStr = str;
+    if (newStr && (typeof newStr === 'number')) {
+      newStr = `${newStr}`;
+    }
+    if (newStr && !(typeof newStr === 'string')) {
       throw new InvalidArgumentException('Response must be a String');
     }
-    if (!str) {
+    if (!newStr) {
       // 自定义批次号
       return moment().format('YYYYMMDDHHmmss') + new Date().getMilliseconds();
     }
     // 如果发送成功的话，则返回内容为：`0,{批次号}`
     const reg = /^0,(.*)$/;
-    const matches = str.match(reg);
+    const matches = newStr.match(reg);
     if (matches instanceof Array && matches.length === 2) {
       return matches[1];
     }
