@@ -1,6 +1,11 @@
 # bmqb-sms
 贝米钱包短信发送库
 
+## 安装：
+```SHELL
+npm install bmqb-sms
+```
+
 ## 使用方式：
 ####1. 必要配置：
 ```JavaScript
