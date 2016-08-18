@@ -13,7 +13,7 @@ export default class SmserAbstract {
   sendVoiceVcode() {
     return new Promise(() => {
       throw new RuntimeException(
-        `Class ${this.constructor.name} A does not support sendVoiceVcode!`
+        `Class ${this.constructor.name} does not support sendVoiceVcode!`
         );
     });
   }
@@ -24,7 +24,7 @@ export default class SmserAbstract {
    */
   sendVcode() {
     return new Promise(() => {
-      throw new RuntimeException(`Class ${this.constructor.name} A does not support sendVcode!`);
+      throw new RuntimeException(`Class ${this.constructor.name} does not support sendVcode!`);
     });
   }
 
@@ -34,7 +34,7 @@ export default class SmserAbstract {
    */
   sendSms() {
     return new Promise(() => {
-      throw new RuntimeException(`Class ${this.constructor.name} A does not support sendSms!`);
+      throw new RuntimeException(`Class ${this.constructor.name} does not support sendSms!`);
     });
   }
 
@@ -44,7 +44,7 @@ export default class SmserAbstract {
    */
   sendPkg() {
     return new Promise(() => {
-      throw new RuntimeException(`Class ${this.constructor.name} A does not support sendPkg!`);
+      throw new RuntimeException(`Class ${this.constructor.name} does not support sendPkg!`);
     });
   }
 

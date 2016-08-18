@@ -20,7 +20,7 @@ const options = {
 };
 
 const sms = new BmqbSms(options);
-sms.sendVcode('13871451762', 'hello').then(res => {
+sms.sendVoiceVcode('13871451762', 'hello').then(res => {
   console.log(res);
 });
 sms.sendPkg([{'phone': '13871451762', 'context': 'ni'}])
