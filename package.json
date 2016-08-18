@@ -1,6 +1,6 @@
 {
   "name": "bmqb-sms",
-  "version": "0.0.7",
+  "version": "0.0.11",
   "description": "BMQB SMS package",
   "main": "index.js",
   "scripts": {

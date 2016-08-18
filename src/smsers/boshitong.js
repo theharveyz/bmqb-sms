@@ -15,18 +15,17 @@ export default class Boshitong extends SmserAbstract {
     if (newStr && !(typeof newStr === 'string')) {
       throw new InvalidArgumentException('Response must be a String');
     }
-    if (!newStr) {
-      // 自定义批次号
-      return moment().format('YYYYMMDDHHmmss') + new Date().getMilliseconds();
-    }
-    // 如果发送成功的话，则返回内容为：`0,{批次号}`
-    const reg = /^0,(.*)$/;
-    const matches = newStr.match(reg);
-    if (matches instanceof Array && matches.length === 2) {
-      return matches[1];
-    }
 
-    return null;
+    if (newStr) {
+      // 如果发送成功的话，则返回内容为：`0,{批次号}`
+      const reg = /^0,(.*)$/;
+      const matches = newStr.match(reg);
+      if (matches instanceof Array && matches.length === 2) {
+        return matches[1];
+      }
+    }
+    // 自定义批次号，确保批次号一定存在
+    return moment().format('YYYYMMDDHHmmss') + new Date().getMilliseconds();
   }
 
   constructor(_config, request) {
@@ -51,7 +50,7 @@ export default class Boshitong extends SmserAbstract {
 
     return this.send('/cmppweb/sendsms', {
       mobile,
-      msg,
+      msg: encodeURI(msg),
     }).then(res => {
       const batchId = Boshitong.fetchBatchId(res);
       return new SmsResponse({
@@ -69,11 +68,15 @@ export default class Boshitong extends SmserAbstract {
     if (pkg.length > 1000) {
       throw new InvalidArgumentException('Every time may not be sent more than 1000 msg');
     }
-    // 变换成字符串
-    const pkgStr = JSON.stringify(pkg);
-
+    const newPkg = pkg.map(ctx => {
+      const context = encodeURI(ctx.context);
+      return {
+        phone: ctx.phone,
+        context,
+      };
+    });
     return this.send('/cmppweb/sendsmspkg', {
-      msg: pkgStr,
+      msg: JSON.stringify(newPkg),
     }).then(res => {
       const batchId = Boshitong.fetchBatchId(res);
       return new SmsResponse({
