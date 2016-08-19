@@ -76,7 +76,7 @@ export default class Yuntongxin extends SmserAbstract {
     }).then(body => {
       let status = 'failed';
       try {
-        const bodyObj = body instanceof String ? JSON.parse(body) : body;
+        const bodyObj = typeof body === 'string' ? JSON.parse(body) : body;
         if (bodyObj.statusCode === '000000') {
           status = 'success';
         }
