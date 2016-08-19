@@ -1,6 +1,6 @@
 {
   "name": "bmqb-sms",
-  "version": "0.1.0",
+  "version": "0.1.2",
   "description": "BMQB SMS package",
   "main": "index.js",
   "scripts": {
@@ -28,6 +28,7 @@
     "babel": "^6.5.2",
     "babel-cli": "^6.11.4",
     "babel-eslint": "^6.1.2",
+    "babel-preset-es2015": "^6.13.2",
     "babel-preset-es2015-node4": "^2.1.0",
     "babel-preset-stage-3": "^6.11.0",
     "babel-register": "^6.11.6",

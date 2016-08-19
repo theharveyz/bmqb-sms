@@ -55,7 +55,8 @@ export default class SmserAbstract {
     const initConfig = _.clone(this.config);
     Object.assign(this.config, config);
     _.forEach(initConfig, (v, k) => {
-      if (!this.config[k]) {
+      // 是否定义
+      if (typeof this.config[k] === 'undefined') {
         throw new InvalidArgumentException(`Please specify the config param: ${k}`);
       }
     });

@@ -37,14 +37,14 @@ export default class Boshitong extends SmserAbstract {
     return SIGN_MSG + con;
   }
 
-  constructor(_config, request) {
+  constructor(config, request) {
     super({
       domain: null,
       uid: null,
       pwd: null,
       srcphone: null,
     });
-    this.setConfig(_config);
+    this.setConfig(config);
     this.request = request;
   }
 

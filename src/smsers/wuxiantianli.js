@@ -11,13 +11,13 @@ export default class Wuxiantianli extends SmserAbstract {
     return moment().format('YYYYMMDDHHmmss') + new Date().getMilliseconds();
   }
 
-  constructor(_config, request) {
+  constructor(config, request) {
     super({
       service: null,
       clientid: null,
       password: null,
     });
-    this.setConfig(_config);
+    this.setConfig(config);
     this.request = request;
   }
 
@@ -108,7 +108,7 @@ export default class Wuxiantianli extends SmserAbstract {
     }).then(body => {
       let status = 'failed';
       try {
-        const bodyObj = body instanceof String ? JSON.parse(body) : body;
+        const bodyObj = typeof body === 'string' ? JSON.parse(body) : body;
         if (bodyObj.status === '0' || bodyObj.status === 0) {
           status = 'success';
         }
