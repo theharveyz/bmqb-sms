@@ -26,6 +26,10 @@ export default class Boshitong extends SmserAbstract {
       }
     }
     // 自定义批次号，确保批次号一定存在
+    return null;
+  }
+
+  static genCustomBatchId() {
     return moment().format('YYYYMMDDHHmmss') + new Date().getMilliseconds();
   }
 
@@ -63,7 +67,7 @@ export default class Boshitong extends SmserAbstract {
     }).then(res => {
       const batchId = Boshitong.fetchBatchId(res);
       return new SmsResponse({
-        ssid: batchId,
+        ssid: batchId ? batchId : Boshitong.genCustomBatchId(),
         status: batchId ? 'success' : 'failed',
         body: res,
       });
@@ -89,7 +93,7 @@ export default class Boshitong extends SmserAbstract {
     }).then(res => {
       const batchId = Boshitong.fetchBatchId(res);
       return new SmsResponse({
-        ssid: batchId,
+        ssid: batchId ? batchId : Boshitong.genCustomBatchId(),
         status: batchId ? 'success' : 'failed',
         body: res,
       });
