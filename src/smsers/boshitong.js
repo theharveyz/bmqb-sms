@@ -101,17 +101,17 @@ export default class Boshitong extends SmserAbstract {
   }
 
   send(api, data) {
-    const qs = {
+    const form = {
       uid: this.config.uid,
       pwd: md5(this.config.pwd),
       srcphone: this.config.srcphone,
     };
-    Object.assign(qs, data);
+    Object.assign(form, data);
 
     return this.request({
       url: this.config.domain + api,
       method: 'POST',
-      qs,
+      form,
       timeout: 10000,
       useQuerystring: true,
     });
