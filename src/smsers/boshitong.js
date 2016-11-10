@@ -5,8 +5,6 @@ import { md5 } from '../utils';
 import SmsResponse from '../sms_response';
 import { InvalidArgumentException } from '../exceptions';
 
-const SIGN_MSG = '【贝米钱包】';
-
 export default class Boshitong extends SmserAbstract {
   static fetchBatchId(str) {
     let newStr = str;
@@ -33,12 +31,12 @@ export default class Boshitong extends SmserAbstract {
     return moment().format('YYYYMMDDHHmmss') + new Date().getMilliseconds();
   }
 
-  static autoSignContext(str) {
+  autoSignContext(str) {
     let con = str;
-    if (con && (con.startsWith(SIGN_MSG) || con.endsWith(SIGN_MSG))) {
-      con = _.trim(con, SIGN_MSG);
+    if (con && (con.startsWith(this.config.sign) || con.endsWith(this.config.sign))) {
+      con = _.trim(con, this.config.sign);
     }
-    return SIGN_MSG + con;
+    return this.config.sign + con;
   }
 
   constructor(config, request) {
@@ -47,6 +45,7 @@ export default class Boshitong extends SmserAbstract {
       uid: null,
       pwd: null,
       srcphone: null,
+      sign: null, // 必需
     });
     this.setConfig(config);
     this.request = request;
@@ -63,7 +62,7 @@ export default class Boshitong extends SmserAbstract {
 
     return this.send('/cmppweb/sendsms', {
       mobile,
-      msg: encodeURI(Boshitong.autoSignContext(msg)),
+      msg: encodeURI(this.autoSignContext(msg)),
     }).then(res => {
       const batchId = Boshitong.fetchBatchId(res);
       return new SmsResponse({
@@ -82,7 +81,7 @@ export default class Boshitong extends SmserAbstract {
       throw new InvalidArgumentException('Every time may not be sent more than 1000 msg');
     }
     const newPkg = pkg.map(ctx => {
-      const context = encodeURI(Boshitong.autoSignContext(ctx.context));
+      const context = encodeURI(this.autoSignContext(ctx.context));
       return {
         phone: ctx.phone,
         context,
@@ -113,7 +112,6 @@ export default class Boshitong extends SmserAbstract {
       method: 'POST',
       form,
       timeout: 10000,
-      useQuerystring: true,
     });
   }
 

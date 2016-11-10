@@ -4,5 +4,6 @@
     "es2015-node4"
   ],
   "plugins": [
+  	"istanbul"
   ]
 }
