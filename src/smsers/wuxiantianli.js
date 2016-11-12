@@ -6,7 +6,6 @@ import { InvalidArgumentException } from '../exceptions';
 import SmsResponse from '../sms_response';
 
 export default class Wuxiantianli extends SmserAbstract {
-
   static getBatchId() {
     return moment().format('YYYYMMDDHHmmss') + new Date().getMilliseconds();
   }
@@ -16,9 +15,19 @@ export default class Wuxiantianli extends SmserAbstract {
       service: null,
       clientid: null,
       password: null,
+      sign: null, // 必需
     });
     this.setConfig(config);
     this.request = request;
+  }
+
+  // 签名要后置
+  autoSignContext(str) {
+    let con = str;
+    if (con && (con.startsWith(this.config.sign) || con.endsWith(this.config.sign))) {
+      con = _.trim(con, this.config.sign);
+    }
+    return con + this.config.sign;
   }
 
   sendVcode(mobile, msg) {
@@ -35,7 +44,7 @@ export default class Wuxiantianli extends SmserAbstract {
     return this.send({
       api: '/communication/sendSms.ashx',
       mobile,
-      msg,
+      msg: this.autoSignContext(msg),
       pid: this.config.vcode_productid,
     });
   }
@@ -52,7 +61,7 @@ export default class Wuxiantianli extends SmserAbstract {
     return this.send({
       api: '/communication/sendSms.ashx',
       mobile,
-      msg,
+      msg: this.autoSignContext(msg),
       pid: this.config.productid,
     });
   }
@@ -71,7 +80,7 @@ export default class Wuxiantianli extends SmserAbstract {
     let msg = '';
     pkg.map(p => {
       mobiles.add(p.phone);
-      msg = p.context;
+      msg = this.autoSignContext(p.context);
       return null;
     });
     return this.sendSms(Array.from(mobiles).join(), msg);

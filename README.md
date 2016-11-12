@@ -11,6 +11,7 @@ npm install bmqb-sms
 ```JavaScript
 {
   'smser': 'yuntongxin',
+  'debug': true,
   'config': {
   	...
   }
