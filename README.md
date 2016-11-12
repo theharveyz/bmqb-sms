@@ -1,5 +1,6 @@
-# bmqb-sms
-贝米钱包短信发送库
+# bmqb-sms 贝米钱包第三方短信发送SDK
+[![npm version](https://badge.fury.io/js/bmqb-sms.svg)](https://badge.fury.io/js/bmqb-sms)
+[![Build Status](https://api.travis-ci.org/bmqb/bmqb-sms.svg?branch=master)](https://travis-ci.org/bmqb/bmqb-sms)
 
 ## 安装：
 ```SHELL
