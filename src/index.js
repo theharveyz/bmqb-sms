@@ -6,7 +6,12 @@ import { InvalidArgumentException } from './exceptions';
 const SIGN = '【贝米钱包】';
 
 export default class BmqbSms {
-  constructor({ smser, config = null, debug = false, sign = SIGN}) {
+  constructor({
+    smser,
+    config = null,
+    debug = false,
+    sign = SIGN,
+  }) {
     if (!config || !smser) {
       throw new InvalidArgumentException('Invalid format of config!');
     }

@@ -1,8 +1,7 @@
 import _ from 'lodash';
-import moment from 'moment';
+import uuid from 'node-uuid';
 import SmserAbstract from './abstract';
 import { md5 } from '../utils';
-import uuid from 'node-uuid';
 import SmsResponse from '../sms_response';
 import { InvalidArgumentException } from '../exceptions';
 
@@ -51,7 +50,7 @@ export default class Dahansantong extends SmserAbstract {
     if (con && (con.startsWith(this.config.sign) || con.endsWith(this.config.sign))) {
       con = _.trim(con, this.config.sign);
     }
-    return  this.config.sign + con;
+    return this.config.sign + con;
   }
 
   sendVcode(mobile, msg) {
@@ -74,6 +73,7 @@ export default class Dahansantong extends SmserAbstract {
       subcode: this.config.subcode,
       sign: this.config.sign,
       msgid, // 每批的msgid一致
+      sendtime: null,
     }).then(res => Dahansantong.getSmsResponse(res, msgid));
   }
 
@@ -86,15 +86,14 @@ export default class Dahansantong extends SmserAbstract {
     }
 
     const msgid = Dahansantong.getMsgid();
-    const newPkg = pkg.map(ctx => {
-      return {
-        phones: ctx.phone,
-        content: this.autoSignContext(ctx.context),
-        subcode: this.config.subcode,
-        sign: this.config.sign,
-        msgid,
-      };
-    });
+    const newPkg = pkg.map(ctx => ({
+      phones: ctx.phone,
+      content: this.autoSignContext(ctx.context),
+      subcode: this.config.subcode,
+      sign: this.config.sign,
+      msgid,
+      sendtime: null,
+    }));
     return this.send('/json/sms/BatchSubmit', {
       data: newPkg,
     }).then(res => Dahansantong.getSmsResponse(res, msgid));
@@ -108,9 +107,13 @@ export default class Dahansantong extends SmserAbstract {
     Object.assign(form, data);
     return this.request({
       url: this.config.domain + api,
+      headers: {
+        'content-type': 'application/json',
+      },
       method: 'POST',
-      form,
+      body: form,
       timeout: 10000,
+      json: true,
     });
   }
 

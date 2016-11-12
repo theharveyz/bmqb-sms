@@ -66,7 +66,7 @@ export default class Boshitong extends SmserAbstract {
     }).then(res => {
       const batchId = Boshitong.fetchBatchId(res);
       return new SmsResponse({
-        ssid: batchId ? batchId : Boshitong.genCustomBatchId(),
+        ssid: batchId || Boshitong.genCustomBatchId(),
         status: batchId ? 'success' : 'failed',
         body: res,
       });
@@ -92,7 +92,7 @@ export default class Boshitong extends SmserAbstract {
     }).then(res => {
       const batchId = Boshitong.fetchBatchId(res);
       return new SmsResponse({
-        ssid: batchId ? batchId : Boshitong.genCustomBatchId(),
+        ssid: batchId || Boshitong.genCustomBatchId(),
         status: batchId ? 'success' : 'failed',
         body: res,
       });
