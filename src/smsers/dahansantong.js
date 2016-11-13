@@ -82,7 +82,7 @@ export default class Dahansantong extends SmserAbstract {
       throw new InvalidArgumentException('Invalid format: pkg!');
     }
     if (pkg.length > PKG_MAX_LEN) {
-      throw new InvalidArgumentException('Every time may not be sent more than 1000 msg');
+      throw new InvalidArgumentException(`Every time may not be sent more than ${PKG_MAX_LEN} msg`);
     }
 
     const msgid = Dahansantong.getMsgid();
