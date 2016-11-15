@@ -8,7 +8,7 @@ import { InvalidArgumentException } from '../exceptions';
 // 批量发送最大支持条数
 const PKG_MAX_LEN = 500;
 const STATUS_CODE = {
-  success: '0',
+  success: 0,
 };
 
 export default class Dahansantong extends SmserAbstract {
@@ -22,8 +22,8 @@ export default class Dahansantong extends SmserAbstract {
 
   static getSmsResponse(res, msgid) {
     let status = 'failed';
-    if (res && res.msgid) {
-      status = res.status === STATUS_CODE.success ? 'success' : status;
+    if (res && res.msgid && res.result) {
+      status = parseInt(res.result, 10) === STATUS_CODE.success ? 'success' : status;
     }
     return new SmsResponse({
       ssid: msgid,
@@ -45,12 +45,13 @@ export default class Dahansantong extends SmserAbstract {
   }
 
   // 签名要前置
+  // 大汉三通短信内容中无需再添加签名
   autoSignContext(str) {
     let con = str;
     if (con && (con.startsWith(this.config.sign) || con.endsWith(this.config.sign))) {
       con = _.trim(con, this.config.sign);
     }
-    return this.config.sign + con;
+    return con;
   }
 
   sendVcode(mobile, msg) {
