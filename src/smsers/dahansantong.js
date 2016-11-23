@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import uuid from 'node-uuid';
+import uuid from 'uuid';
 import SmserAbstract from './abstract';
 import { md5 } from '../utils';
 import SmsResponse from '../sms_response';
