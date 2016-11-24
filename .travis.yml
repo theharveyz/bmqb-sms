@@ -2,4 +2,7 @@ language: node_js
 node_js:
   - "4.6.1"
 script:
-  - "npm test"
+    - "npm run lint"
+    - "npm test"
+after_success:
+  - bash <(curl -s https://codecov.io/bash)
