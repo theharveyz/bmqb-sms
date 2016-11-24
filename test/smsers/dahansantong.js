@@ -17,9 +17,9 @@ test('smser dahansantong', async t => {
   };
   const smser = new Dahansantong(demoConfig, requestSpy);
   const mobile = '11111111111';
-  const msg = 'test';
+  const msg = '【测试】test';
   t.is(smser.config.sign, demoConfig.sign);
-  t.is(smser.autoSignContext(msg), demoConfig.sign + msg);
+  t.is(smser.autoSignContext(msg), 'test'); // 不需要加【测试】
 
   const res = await smser.sendSms(mobile, msg);
   t.true(res instanceof SmsResponse);
